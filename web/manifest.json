@@ -1,0 +1,35 @@
+{
+    "name": "mealmaster",
+    "short_name": "mealmaster",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#0175C2",
+    "theme_color": "#0175C2",
+    "description": "Le projet de mon app mobile pour les YDAYS 2024->2026 MealMaster est une application innovante et intuitive conçue pour simplifier la planification des repas et la gestion des courses. Elle permet aux utilisateurs de planifier leurs repas hebdomadaires, de générer automatiquement des listes de courses en fonction des recettes sélectionnées, et d'obtenir des informations sur les prix des aliments dans les supermarchés locaux. MealMaster vise à réduire le gaspillage alimentaire, à économiser du temps et à améliorer l'expérience culinaire de ses utilisateurs.",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}
