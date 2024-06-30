@@ -18,12 +18,14 @@ class MealMasterApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: MainScreen(),
+      home: const MainScreen(),
     );
   }
 }
 
 class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
   @override
   _MainScreenState createState() => _MainScreenState();
 }
