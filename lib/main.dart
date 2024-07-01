@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/search_screen.dart';
 import 'screens/notification_screen.dart';
@@ -18,8 +20,24 @@ class MealMasterApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const MainScreen(),
+      home: FutureBuilder<String?>(
+        future: _getUserId(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasData && snapshot.data != null) {
+            return const MainScreen();
+          } else {
+            return const LoginScreen();
+          }
+        },
+      ),
     );
+  }
+
+  Future<String?> _getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('userId');
   }
 }
 

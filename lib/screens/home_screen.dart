@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/api_service.dart';
 import '../models/recipe_model.dart';
 import '../widgets/recipe_card_widget.dart';
+import '../widgets/filter_chip_widget.dart';
+import 'login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,13 +14,29 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Future<List<Recipe>> futureRecipes;
+  Future<List<Recipe>>? futureRecipes;
   String selectedFilter = '';
 
   @override
   void initState() {
     super.initState();
-    futureRecipes = ApiService().fetchRecipes();
+    _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString('userId');
+
+    if (userId == null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
+    } else {
+      setState(() {
+        futureRecipes = ApiService().fetchRecipes();
+      });
+    }
   }
 
   void applyFilter(String filter) {
@@ -36,49 +55,50 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: [
           Container(
-            height: 50,
             padding: EdgeInsets.symmetric(vertical: 10),
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                FilterChip(
-                  label: Text('All'),
-                  selected: selectedFilter == '',
-                  onSelected: (bool selected) {
-                    applyFilter('');
-                  },
-                ),
-                SizedBox(width: 8),
-                FilterChip(
-                  label: Text('Vegan'),
-                  selected: selectedFilter == 'vegan',
-                  onSelected: (bool selected) {
-                    applyFilter('vegan');
-                  },
-                ),
-                SizedBox(width: 8),
-                FilterChip(
-                  label: Text('Vegetarian'),
-                  selected: selectedFilter == 'vegetarian',
-                  onSelected: (bool selected) {
-                    applyFilter('vegetarian');
-                  },
-                ),
-                SizedBox(width: 8),
-                FilterChip(
-                  label: Text('Meat'),
-                  selected: selectedFilter == 'meat',
-                  onSelected: (bool selected) {
-                    applyFilter('meat');
-                  },
-                ),
-                // Ajouter d'autres filtres si nécessaire
-              ],
+            child: Center(
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 8.0,
+                children: [
+                  FilterChipWidget(
+                    label: 'All',
+                    isSelected: selectedFilter == '',
+                    onSelected: (selected) {
+                      applyFilter('');
+                    },
+                  ),
+                  FilterChipWidget(
+                    label: 'Vegan',
+                    isSelected: selectedFilter == 'vegan',
+                    onSelected: (selected) {
+                      applyFilter('vegan');
+                    },
+                  ),
+                  FilterChipWidget(
+                    label: 'Vegetarian',
+                    isSelected: selectedFilter == 'vegetarian',
+                    onSelected: (selected) {
+                      applyFilter('vegetarian');
+                    },
+                  ),
+                  FilterChipWidget(
+                    label: 'Meat',
+                    isSelected: selectedFilter == 'meat',
+                    onSelected: (selected) {
+                      applyFilter('meat');
+                    },
+                  ),
+                  // Ajouter d'autres filtres si nécessaire
+                ],
+              ),
             ),
           ),
           Expanded(
             child: Center(
-              child: FutureBuilder<List<Recipe>>(
+              child: futureRecipes == null
+                  ? CircularProgressIndicator()
+                  : FutureBuilder<List<Recipe>>(
                 future: futureRecipes,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {

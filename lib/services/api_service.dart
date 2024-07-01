@@ -1,6 +1,8 @@
 import 'package:pocketbase/pocketbase.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/recipe_model.dart';
 import '../models/ingredient_model.dart';
+import '../models/user_model.dart';
 
 class ApiService {
   final PocketBase pb = PocketBase('http://192.168.0.28:80');
@@ -28,7 +30,17 @@ class ApiService {
     final response = await pb.collection('ingredients').getFullList(
       filter: filter,
     );
-
     return response.map((item) => Ingredient.fromJson(item.toJson())).toList();
+  }
+
+  Future<String> login(String email, String password) async {
+    final authData = await pb.collection('users').authWithPassword(email, password);
+    return pb.authStore.model.id;
+  }
+
+  Future<void> logout() async {
+    pb.authStore.clear();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('userId');
   }
 }

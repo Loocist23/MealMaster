@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../services/api_service.dart';
+import '../screens/login_screen.dart';
 import '../screens/profile_screen.dart';
 import '../screens/settings_screen.dart';
 
@@ -40,8 +43,13 @@ class DrawerWidget extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Déconnexion'),
-            onTap: () {
-              // Déconnexion logic here
+            onTap: () async {
+              await ApiService().logout();
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                    (route) => false,
+              );
             },
           ),
         ],
