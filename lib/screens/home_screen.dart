@@ -5,6 +5,7 @@ import '../models/recipe_model.dart';
 import '../widgets/recipe_card_widget.dart';
 import '../widgets/filter_chip_widget.dart';
 import 'login_screen.dart';
+import 'recipe_detail_screen.dart'; // Importer la page de détail
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -89,7 +90,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       applyFilter('meat');
                     },
                   ),
-                  // Ajouter d'autres filtres si nécessaire
                 ],
               ),
             ),
@@ -112,13 +112,47 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
                         final recipe = snapshot.data![index];
+
+                        // Assurez-vous que les valeurs ne sont pas nulles
+                        final String name = recipe.name;
+                        final String difficulty = recipe.difficultyLevel != null
+                            ? recipe.difficultyLevel.toString()
+                            : 'Unknown';
+                        final String servings = recipe.servings != null
+                            ? recipe.servings.toString()
+                            : 'Unknown';
+
                         return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                          child: RecipeCard(
-                            recipe: recipe,
-                            onTap: () {
-                              // Navigation vers la page de détail se fait dans RecipeCard
-                            },
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 16.0),
+                          child: Card(
+                            elevation: 3,
+                            child: ListTile(
+                              title: Text(name,
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold)),
+                              subtitle: Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  Text('Difficulty: $difficulty/5'),
+                                  Text('Servings: $servings'),
+                                ],
+                              ),
+                              onTap: () {
+                                // Navigation vers la page de détail
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        RecipeDetailScreen(
+                                          recipeId: recipe.id, // Passer l'ID de la recette
+                                        ),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         );
                       },

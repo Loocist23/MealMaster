@@ -5,7 +5,7 @@ import '../models/ingredient_model.dart';
 import '../models/user_model.dart';
 
 class ApiService {
-  final PocketBase pb = PocketBase('http://192.168.0.28:80');
+  final PocketBase pb = PocketBase('http://192.168.1.48:8090');
 
   Future<List<Recipe>> fetchRecipes({String? type}) async {
     final response = await pb.collection('recipes').getFullList();
@@ -24,12 +24,15 @@ class ApiService {
     return Recipe.fromJson(record.toJson());
   }
 
-  Future<List<Ingredient>> fetchIngredients(List<String> ingredientIds) async {
-    // Join the ingredient IDs correctly for the URL
+  Future<List<Ingredient>> fetchIngredientsByIds(List<String> ingredientIds) async {
+    if (ingredientIds.isEmpty) {
+      return [];
+    }
+
+    // Crée un filtre pour récupérer les ingrédients par leurs IDs
     final filter = ingredientIds.map((id) => 'id="$id"').join(' || ');
-    final response = await pb.collection('ingredients').getFullList(
-      filter: filter,
-    );
+    final response = await pb.collection('ingredients').getFullList(filter: filter);
+
     return response.map((item) => Ingredient.fromJson(item.toJson())).toList();
   }
 
