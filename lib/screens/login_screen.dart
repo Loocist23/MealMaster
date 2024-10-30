@@ -28,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final userId = await ApiService().login(email, password);
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('userId', userId);
+      await prefs.setString('userId', userId!);
 
       Navigator.pushReplacement(
         context,

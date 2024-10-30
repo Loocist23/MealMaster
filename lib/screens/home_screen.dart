@@ -6,6 +6,7 @@ import '../widgets/recipe_card_widget.dart';
 import '../widgets/filter_chip_widget.dart';
 import 'login_screen.dart';
 import 'recipe_detail_screen.dart'; // Importer la page de détail
+import 'create_recipe_screen.dart'; // Importer la page de création
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -113,7 +114,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemBuilder: (context, index) {
                         final recipe = snapshot.data![index];
 
-                        // Assurez-vous que les valeurs ne sont pas nulles
                         final String name = recipe.name;
                         final String difficulty = recipe.difficultyLevel != null
                             ? recipe.difficultyLevel.toString()
@@ -141,13 +141,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ],
                               ),
                               onTap: () {
-                                // Navigation vers la page de détail
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
                                         RecipeDetailScreen(
-                                          recipeId: recipe.id, // Passer l'ID de la recette
+                                          recipeId: recipe.id,
                                         ),
                                   ),
                                 );
@@ -163,6 +162,16 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CreateRecipeScreen()),
+          );
+        },
+        child: Icon(Icons.add),
+        tooltip: 'Create Recipe',
       ),
     );
   }
